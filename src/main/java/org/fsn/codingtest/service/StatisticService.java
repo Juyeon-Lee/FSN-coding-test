@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,8 @@ public class StatisticService {
     파라메터로 날짜 정보 전달 : 해당 날짜의 요청 수, 응답 수, 클릭 수 합계를 JSON 형식으로 응답
      */
     @Transactional(readOnly = true)
-    public SearchResponseDto findSumByDate(LocalDate date) {
+    public SearchResponseDto findSumByDate(String string) {
+        LocalDate date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE);
         List<Statistic> list = statisticRepository.findAllByDate(date);
         SearchResponseDto dto;
         if(list.size()==0) { // 해당 날짜에 데이터가 아무것도 없으면  TODO: 없애도 되지 않나? 에러나나?
@@ -45,7 +47,8 @@ public class StatisticService {
     파라메터로 날짜와 시각 정보 전달 : 해당 날짜의 시각에 요청 수, 응답 수, 클릭 수 JSON 형식으로 응답
      */
     @Transactional(readOnly = true)
-    public SearchResponseDto findByDateTime(LocalDate date, int time) {
+    public SearchResponseDto findByDateTime(String string, int time) {
+        LocalDate date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE);
         Optional<Statistic> statistic = statisticRepository.findByDateAndTime(date, time);
         SearchResponseDto dto;
         if(statistic.isPresent()){
@@ -62,13 +65,14 @@ public class StatisticService {
     날짜, 시각, 요청 수, 응답 수, 클릭 수 정보를 담고 있는 json 형식 파일 이용
      */
     public String upload(UploadRequestDto dto) {
-        Optional<Statistic> data = statisticRepository.findByDateAndTime(dto.getDate(), dto.getTime());
+        LocalDate date = LocalDate.parse(dto.getDate(), DateTimeFormatter.ISO_DATE);
+        Optional<Statistic> data = statisticRepository.findByDateAndTime(date, dto.getTime());
         if(data.isPresent()){   //기존 데이터 업데이트
             Statistic statistic = data.get();
             statistic.updateThreeData(dto.getRequest(),dto.getResponse(),dto.getClick());
         }else{  // 신규 추가
             Statistic statistic = Statistic.builder()
-                    .date(dto.getDate()).time(dto.getTime())
+                    .date(date).time(dto.getTime())
                     .request(dto.getRequest()).response(dto.getResponse()).click(dto.getClick())
                     .build();
             statisticRepository.save(statistic);
