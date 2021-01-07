@@ -29,8 +29,8 @@ public class StatisticApiController {
             return ResponseEntity.ok(dto);
         }
     }
-    @GetMapping({"/api/v1/date={date}&time={time}"
-            , "/api/v1/time={time}&date={date}"})
+    @GetMapping({"/api/v1/date={date}/time={time}"
+            , "/api/v1/time={time}/date={date}"})
     public ResponseEntity<SearchResponseDto> search(@PathVariable("date") String date,
                                                     @PathVariable("time") int time){
         SearchResponseDto dto = statisticService.findByDateTime(date,time);
@@ -47,7 +47,8 @@ public class StatisticApiController {
         -   업로드 결과(success, error) return
      */
     @PostMapping("/api/v1")
-    public String upload(@RequestBody UploadRequestDto dto){
-        return statisticService.upload(dto);
+    public ResponseEntity<UploadResponseDto> upload(@RequestBody UploadRequestDto dto){
+        UploadResponseDto response = statisticService.upload(dto);
+        return ResponseEntity.ok(response);
     }
 }

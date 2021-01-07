@@ -42,17 +42,18 @@ dependencies {
 	}
 }
 
-test {
-	useJUnitPlatform()
-	outputs.dir 'snippets'
+ext {
+	snippetsDir = file('build/generated-snippets') //문서 저장위치
 }
 
-ext {
-	snippetsDir = file('build/generated-snippets')
+test {
+	useJUnitPlatform()
+	outputs.dir snippetsDir  // 선언한 디렉토리에 생성
 }
 
 asciidoctor {
-	inputs.dir 'snippets'
+	attributes 'snippets': snippetsDir // adoc 파일 생성시 올바르게 include하기 위함
+	inputs.dir snippetsDir
 	dependsOn test
 }
 
@@ -61,4 +62,15 @@ bootJar {
 	from ("${asciidoctor.outputDir}/html5") {
 		into 'static/docs'
 	}
+}
+
+task copyDocument(type: Copy) { // 생성된 docs 파일을 build시 static 아래에 docs로 복사!
+	dependsOn bootJar
+
+	from file("build/asciidoc/html5/")
+	into file("src/main/resources/static/docs")
+}
+
+build {
+	dependsOn copyDocument // build시 copy 실행
 }

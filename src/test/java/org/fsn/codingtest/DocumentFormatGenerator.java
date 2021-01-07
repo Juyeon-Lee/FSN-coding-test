@@ -10,4 +10,7 @@ public interface DocumentFormatGenerator {
     static Attributes.Attribute getDateFormat() {
         return key("format").value("yyyy-MM-dd");
     }
+    static Attributes.Attribute getTimeFormat() {
+        return key("format").value("HH");
+    }
 }

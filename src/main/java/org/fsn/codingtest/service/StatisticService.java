@@ -5,6 +5,7 @@ import org.fsn.codingtest.domain.Statistic;
 import org.fsn.codingtest.domain.StatisticRepository;
 import org.fsn.codingtest.web.SearchResponseDto;
 import org.fsn.codingtest.web.UploadRequestDto;
+import org.fsn.codingtest.web.UploadResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,8 @@ public class StatisticService {
     날짜와 시각이 존재하지 않으면 신규 추가, 존재하면 기존 데이터 업데이트
     날짜, 시각, 요청 수, 응답 수, 클릭 수 정보를 담고 있는 json 형식 파일 이용
      */
-    public String upload(UploadRequestDto dto) {
+    @Transactional
+    public UploadResponseDto upload(UploadRequestDto dto) {
         LocalDate date = LocalDate.parse(dto.getDate(), DateTimeFormatter.ISO_DATE);
         Optional<Statistic> data = statisticRepository.findByDateAndTime(date, dto.getTime());
         if(data.isPresent()){   //기존 데이터 업데이트
@@ -77,6 +79,6 @@ public class StatisticService {
                     .build();
             statisticRepository.save(statistic);
         }
-        return "success";
+        return new UploadResponseDto("success");
     }
 }
