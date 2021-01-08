@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,8 +36,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,7 +108,7 @@ public class StatisticApiControllerTest {
                 stat1.getResponse()+ stat2.getResponse(),
                 stat1.getClick()+stat2.getClick());
 
-        String url = "http://localhost:"+port+"/api/v1/date={date}";
+        String url = "http://localhost:"+port+"/api/v1?date={date}";
 
         //when
         ResultActions result = mvc.perform(get(url,date.toString()).contentType(MediaType.APPLICATION_JSON));
@@ -118,10 +118,9 @@ public class StatisticApiControllerTest {
                 .andDo(document("search-by-date",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("date").attributes(getDateFormat()).description("날짜")
                         ),
-                        //requestFields(),
                         responseFields(
                                 fieldWithPath("request").type(JsonFieldType.NUMBER).description("해당 날짜의 요청 수 합계"),
                                 fieldWithPath("response").type(JsonFieldType.NUMBER).description("해당 날짜의 응답 수 합계"),
@@ -139,7 +138,7 @@ public class StatisticApiControllerTest {
         // 예상 responseDto
         SearchResponseDto dto = new SearchResponseDto(0,0,0);
 
-        String url = "http://localhost:"+port+"/api/v1/date={date}";
+        String url = "http://localhost:"+port+"/api/v1?date={date}";
 
         //when
         ResultActions result = mvc.perform(get(url,
@@ -161,7 +160,7 @@ public class StatisticApiControllerTest {
         SearchResponseDto dto = new SearchResponseDto(  // 예상 responseDto
                 stat1.getRequest(), stat1.getResponse(), stat1.getClick());
 
-        String url = "http://localhost:"+port+"/api/v1/date={date}/time={time}";
+        String url = "http://localhost:"+port+"/api/v1?date={date}&time={time}";
 
         //when
         ResultActions result = mvc.perform(get(url,date.toString(),time).contentType(MediaType.APPLICATION_JSON));
@@ -171,11 +170,10 @@ public class StatisticApiControllerTest {
                 .andDo(document("search-by-date-and-time",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        pathParameters(
+                        requestParameters(
                                 parameterWithName("date").attributes(getDateFormat()).description("날짜"),
                                 parameterWithName("time").attributes(getTimeFormat()).description("시각")
                         ),
-                        //requestFields(),
                         responseFields(
                                 fieldWithPath("request").type(JsonFieldType.NUMBER).description("해당 날짜.시각의 요청 수"),
                                 fieldWithPath("response").type(JsonFieldType.NUMBER).description("해당 날짜.시각의 응답 수"),
@@ -192,7 +190,7 @@ public class StatisticApiControllerTest {
         //given
         SearchResponseDto dto = new SearchResponseDto(0,0,0);   // 예상 responseDto
 
-        String url = "http://localhost:"+port+"/api/v1/date={date}/time={time}";
+        String url = "http://localhost:"+port+"/api/v1?date={date}&time={time}";
 
         //when
         ResultActions result = mvc.perform(get(url,

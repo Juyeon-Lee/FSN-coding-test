@@ -16,24 +16,20 @@ public class StatisticApiController {
     private final StatisticService statisticService;
 
     /*
-    -	통계 조회 기능 - overloading
+    -	통계 조회 기능
         -	파라메터로 날짜 정보 전달 : 해당 날짜의 요청 수, 응답 수, 클릭 수 합계를 JSON 형식으로 응답
         -	파라메터로 날짜와 시각 정보 전달 : 해당 날짜의 시각에 요청 수, 응답 수, 클릭 수 JSON 형식으로 응답
      */
-    @GetMapping("/api/v1/date={date}")
-    public ResponseEntity<SearchResponseDto> search(@PathVariable("date") String date){
-        SearchResponseDto dto = statisticService.findSumByDate(date);
-        if (dto == null){
-            return ResponseEntity.notFound().build();
+    @GetMapping("/api/v1")
+    public ResponseEntity<SearchResponseDto> search(@RequestParam String date,
+                                                    @RequestParam(required = false) String time){
+        SearchResponseDto dto;
+        if(time==null){
+            dto = statisticService.findSumByDate(date);
         }else{
-            return ResponseEntity.ok(dto);
+            dto = statisticService.findByDateTime(date,Integer.parseInt(time));
         }
-    }
-    @GetMapping({"/api/v1/date={date}/time={time}"
-            , "/api/v1/time={time}/date={date}"})
-    public ResponseEntity<SearchResponseDto> search(@PathVariable("date") String date,
-                                                    @PathVariable("time") int time){
-        SearchResponseDto dto = statisticService.findByDateTime(date,time);
+
         if (dto == null){
             return ResponseEntity.notFound().build();
         }else{
