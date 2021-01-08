@@ -26,6 +26,9 @@ public class StatisticRepositoryTest {
     @Autowired
     StatisticService statisticService;
 
+    private final LocalDate date = LocalDate.now();
+    private final int time=20, req = 1,res=1,clk=1;
+
     @After
     public void cleanup(){
         statisticRepository.deleteAll();
@@ -34,10 +37,7 @@ public class StatisticRepositoryTest {
     @Test
     public void 통계저장_불러오기(){
         //given
-        LocalDate date = LocalDate.now();
-        int time=20, req = 1,res=1,clk=1;
-
-        UploadRequestDto dto = new UploadRequestDto(date.toString(),time,req,res,clk);
+        UploadRequestDto dto = new UploadRequestDto(date.toString(),Integer.toString(time),req,res,clk);
         statisticService.upload(dto);
 
         //when
@@ -52,9 +52,6 @@ public class StatisticRepositoryTest {
     @Test
     public void 통계_날짜로_조회(){
         //given
-        LocalDate date = LocalDate.now();
-        int time=20, req = 1,res=1,clk=1;
-
         Statistic stat1 = statisticRepository.save(Statistic.builder()
                 .date(date).time(time).request(req).response(res).click(clk).build());
         Statistic stat2 = statisticRepository.save(Statistic.builder()
@@ -74,9 +71,6 @@ public class StatisticRepositoryTest {
     @Test
     public void 없는_날짜로_조회(){
         //given
-        LocalDate date = LocalDate.now();
-        int time=20, req = 1,res=1,clk=1;
-
         Statistic stat1 = statisticRepository.save(Statistic.builder()
                 .date(date).time(time).request(req).response(res).click(clk).build());
         Statistic stat2 = statisticRepository.save(Statistic.builder()
@@ -97,9 +91,6 @@ public class StatisticRepositoryTest {
     @Test
     public void 통계_날짜_시간으로_조회(){
         //given
-        LocalDate date = LocalDate.now();
-        int time=20, req = 1,res=1,clk=1;
-
         Statistic stat1 = statisticRepository.save(Statistic.builder()
                 .date(date).time(time).request(req).response(res).click(clk).build());
         Statistic stat2 = statisticRepository.save(Statistic.builder()
@@ -118,9 +109,6 @@ public class StatisticRepositoryTest {
     @Test
     public void 없는_날짜_시각으로_조회(){
         //given
-        LocalDate date = LocalDate.now();
-        int time=20, req = 1,res=1,clk=1;
-
         Statistic stat1 = statisticRepository.save(Statistic.builder()
                 .date(date).time(time).request(req).response(res).click(clk).build());
         Statistic stat2 = statisticRepository.save(Statistic.builder()

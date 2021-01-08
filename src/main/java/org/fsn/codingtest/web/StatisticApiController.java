@@ -1,17 +1,13 @@
 package org.fsn.codingtest.web;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import lombok.RequiredArgsConstructor;
 import org.fsn.codingtest.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.format.DateTimeParseException;
 
 
 @RequiredArgsConstructor
@@ -36,12 +32,7 @@ public class StatisticApiController {
         }else{
             dto = statisticService.findByDateTime(date,time);
         }
-
-        if (dto == null){
-            return ResponseEntity.notFound().build();
-        }else{
-            return ResponseEntity.ok(dto);
-        }
+        return ResponseEntity.ok(dto);
     }
 
     /*
@@ -55,39 +46,4 @@ public class StatisticApiController {
         return ResponseEntity.ok(response);
     }
 
-    /*
-    ================================== ExceptionHandler ===================================
-     */
-    //Json 형식 오류
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleIllJson(JsonParseException ex){
-        return new ResponseEntity<>(ErrorResponse.builder()
-                .error("Json Error").message(ex.getMessage()+"invalid json").build(),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    // 날짜 or 시각 형식 오류
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleIllDateFormat(DateTimeParseException ex){
-        return new ResponseEntity<>(ErrorResponse.builder()
-                .error("Format Error").message(ex.getMessage()+"invalid Date").build(),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    // 조회 파라미터 생략 오류
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleMissingParams(MissingServletRequestParameterException ex) {
-        // Actual exception handling
-        return new ResponseEntity<>(ErrorResponse.builder()
-                .error("Missing Parameters").message(ex.getMessage()+"need valid parameters").build(),
-                HttpStatus.BAD_REQUEST);
-    }
-
-    // 업로드 데이터 검증
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNotValidArgument(MethodArgumentNotValidException ex){
-        return new ResponseEntity<>(ErrorResponse.builder()
-                .error("Not Valid Arguments").message(ex.getMessage()+"not valid Arguments").build(),
-                HttpStatus.BAD_REQUEST);
-    }
 }

@@ -12,7 +12,7 @@ public class UploadRequestDtoTest {
     public void 업로드_롬복_기능_테스트(){
         //given
         String date="2020-12-30";
-        int time=12;
+        String time="12";
         int request = 3, response = 3, click =10;
 
         //when

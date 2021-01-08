@@ -51,8 +51,6 @@ public class StatisticApiControllerTest {
 
     @Autowired
     private StatisticRepository statisticRepository;
-    @Autowired
-    private StatisticService statisticService;
 
     private MockMvc mvc;
 
@@ -209,7 +207,7 @@ public class StatisticApiControllerTest {
         String resMessage = "success";    // 예상 response
 
         UploadRequestDto dto = UploadRequestDto.builder()
-                .date(date.toString()).time(time).request(req+10).response(res+10).click(clk+10)
+                .date(date.toString()).time(Integer.toString(time)).request(req+10).response(res+10).click(clk+10)
                 .build();
         String url = "http://localhost:"+port+"/api/v1";
         String json = new ObjectMapper().writeValueAsString(dto);
@@ -225,7 +223,7 @@ public class StatisticApiControllerTest {
                         getDocumentResponse(),
                         requestFields(
                                 fieldWithPath("date").attributes(getDateFormat()).type(JsonFieldType.STRING).description("통계 데이터의 날짜"),
-                                fieldWithPath("time").attributes(getTimeFormat()).type(JsonFieldType.NUMBER).description("통계 데이터의 시각"),
+                                fieldWithPath("time").attributes(getTimeFormat()).type(JsonFieldType.STRING).description("통계 데이터의 시각"),
                                 fieldWithPath("request").optional().type(JsonFieldType.NUMBER).description("요청 수"),
                                 fieldWithPath("response").optional().type(JsonFieldType.NUMBER).description("응답 수"),
                                 fieldWithPath("click").optional().type(JsonFieldType.NUMBER).description("클릭 수")
@@ -250,7 +248,7 @@ public class StatisticApiControllerTest {
         String resMessage = "success";    // 예상 response
 
         UploadRequestDto dto = UploadRequestDto.builder()
-                .date(date.toString()).time(time-3).request(req+10).response(res+10).click(clk+10)
+                .date(date.toString()).time(Integer.toString(time-3)).request(req+10).response(res+10).click(clk+10)
                 .build();
         String url = "http://localhost:"+port+"/api/v1";
         String json = new ObjectMapper().writeValueAsString(dto);
