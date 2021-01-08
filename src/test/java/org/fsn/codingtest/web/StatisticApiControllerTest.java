@@ -226,9 +226,9 @@ public class StatisticApiControllerTest {
                         requestFields(
                                 fieldWithPath("date").attributes(getDateFormat()).type(JsonFieldType.STRING).description("통계 데이터의 날짜"),
                                 fieldWithPath("time").attributes(getTimeFormat()).type(JsonFieldType.NUMBER).description("통계 데이터의 시각"),
-                                fieldWithPath("request").type(JsonFieldType.NUMBER).description("요청 수"),
-                                fieldWithPath("response").type(JsonFieldType.NUMBER).description("응답 수"),
-                                fieldWithPath("click").type(JsonFieldType.NUMBER).description("클릭 수")
+                                fieldWithPath("request").optional().type(JsonFieldType.NUMBER).description("요청 수"),
+                                fieldWithPath("response").optional().type(JsonFieldType.NUMBER).description("응답 수"),
+                                fieldWithPath("click").optional().type(JsonFieldType.NUMBER).description("클릭 수")
                         ),
                         responseFields( // success / error
                                 fieldWithPath("message").type(JsonFieldType.STRING)

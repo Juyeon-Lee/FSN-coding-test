@@ -132,8 +132,8 @@ public class StatisticRepositoryTest {
         //when
         Optional<Statistic> result1 = statisticRepository.findByDateAndTime(date.plusDays(3), time);
         Optional<Statistic> result2 = statisticRepository.findByDateAndTime(date, time - 3);
-        SearchResponseDto dto1 = statisticService.findByDateTime(date.plusDays(3).toString(), time);
-        SearchResponseDto dto2 = statisticService.findByDateTime(date.toString(), time-3);
+        SearchResponseDto dto1 = statisticService.findByDateTime(date.plusDays(3).toString(), Integer.toString(time));
+        SearchResponseDto dto2 = statisticService.findByDateTime(date.toString(), Integer.toString(time-3));
 
         //then
         assertThat(result1).isInstanceOf(Optional.class).isEmpty();

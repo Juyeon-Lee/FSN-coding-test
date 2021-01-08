@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,9 +49,13 @@ public class StatisticService {
     파라메터로 날짜와 시각 정보 전달 : 해당 날짜의 시각에 요청 수, 응답 수, 클릭 수 JSON 형식으로 응답
      */
     @Transactional(readOnly = true)
-    public SearchResponseDto findByDateTime(String string, int time) {
+    public SearchResponseDto findByDateTime(String string, String time) {
         LocalDate date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE);
-        Optional<Statistic> statistic = statisticRepository.findByDateAndTime(date, time);
+        int intTime=Integer.parseInt(time);
+        if(intTime<0 || intTime>=24){
+            throw new DateTimeParseException("time should have value between 0,23",time,0);
+        }
+        Optional<Statistic> statistic = statisticRepository.findByDateAndTime(date, intTime);
         SearchResponseDto dto;
         if(statistic.isPresent()){
             Statistic data = statistic.get();
